@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Discussions
+    url: https://github.com/orgs/avenidaeng/discussions
+    about: Ask questions and discuss ideas in GitHub Discussions
+  - name: 📖 Documentation
+    url: https://github.com/avenidaeng/avenidaeng
+    about: Check the workspace repository for setup and development guides
+  - name: 🔒 Security Issues
+    url: https://github.com/avenidaeng/.github/blob/main/SECURITY.md
+    about: Report security vulnerabilities privately via email

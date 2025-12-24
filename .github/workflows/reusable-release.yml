@@ -1,0 +1,80 @@
+# Reusable Release Workflow with Changesets
+#
+# Usage in other repos:
+#
+# jobs:
+#   release:
+#     uses: avenidaeng/.github/.github/workflows/reusable-release.yml@main
+#     secrets:
+#       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+name: Release
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: "Node.js version to use"
+        required: false
+        type: string
+        default: "22"
+      pnpm-version:
+        description: "pnpm version to use"
+        required: false
+        type: string
+        default: "9"
+      working-directory:
+        description: "Working directory for the project"
+        required: false
+        type: string
+        default: "."
+    secrets:
+      NPM_TOKEN:
+        description: "NPM token for publishing packages"
+        required: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ inputs.pnpm-version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "pnpm"
+          cache-dependency-path: "${{ inputs.working-directory }}/pnpm-lock.yaml"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@avenidaeng"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm changeset publish
+          version: pnpm changeset version
+          title: "chore: version packages"
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
