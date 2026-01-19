@@ -2,6 +2,8 @@
 
 **Avenida** is a wishlist and product tracking platform that helps users save, organize, and monitor products from any online store.
 
+<img width="1435" height="833" alt="dashboard" src="https://github.com/user-attachments/assets/4fbf2599-9af5-4c85-8b71-0eb0ee2be4f3" />
+
 ## 🛒 What is Avenida?
 
 Avenida makes it easy to:
